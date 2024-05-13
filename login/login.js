@@ -15,8 +15,8 @@ function manejadorConectar() {
         xhr.onload = function () {
             if (xhr.status >= 200 && xhr.status < 300) {
                 var respuesta = JSON.parse(xhr.responseText);
-                if (respuesta.success) {
-                    window.location.href = "./tienda/productos.html";
+                if (respuesta) {
+                    window.location.href = "../tienda/productos.html";
                 } else {
                     setFlashMessage('Datos erroneos.', 'danger', true);
                 }

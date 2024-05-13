@@ -16,46 +16,40 @@ try {
     $conn = new PDO("mysql:host=$host;dbname=$database", $user, $password, $opciones);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    if (isset($_POST['nombre']) && isset($_POST['password'])) {
-        $nombre = $_POST['nombre'];
-        $psw = $_POST['password'];
+    $nombre = $_POST['nombre'];
+    $psw = $_POST['password'];
+    $success = false;
 
-        $sql = "SELECT * FROM usuarios WHERE nombre = :nombre";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute(['nombre' => $nombre]);
-        $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Comprobar datos para tabla usuarios
+    $sql = "SELECT * FROM usuarios WHERE nombre = :nombre";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute(['nombre' => $nombre]);
+    $fila = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($fila) {
-            if ($psw === $fila["password"]) {
-                // Contraseña coincide
-                require "Usuario.class.php";
-                $_SESSION['admin'] = false;
-                $_SESSION['usuario'] = $fila;
-                // Añadir 'success' al objeto de respuesta
-                echo json_encode(['success' => true, 'usuario' => '']);
-            }
+    if ($fila) {
+        if ($psw === $fila["password"]) {
+            require "./clases/Usuario.class.php";
+            $_SESSION['usuario'] = $fila;
+            $success = true;
         }
-
-        $sql1 = "SELECT * FROM empleados WHERE nombre = :nombre";
-        $stmt1 = $conn->prepare($sql1);
-        $stmt1->execute(['nombre' => $_POST['nombre']]);
-        $fila1 = $stmt1->fetch(PDO::FETCH_ASSOC);
-
-        if ($fila1) {
-            if ($psw === $fila1["password"]) {
-                // Contraseña coincide
-                require "Empleado.class.php";
-                $_SESSION['usuario'] = true;
-                $_SESSION['usuario'] = $fila1;
-                // Añadir 'success' al objeto de respuesta
-                echo json_encode(['success' => true, 'empleado' => '']);
-            }
-        }
-        echo json_encode(['success' => false, 'error' => 'Datos incorrectos']);
-    } else {
-        echo json_encode(['success' => false, 'error' => 'Faltan datos']);
     }
+
+    // Comprobar datos para tabla empleados
+    $sql1 = "SELECT * FROM empleados WHERE nombre = :nombre";
+    $stmt1 = $conn->prepare($sql1);
+    $stmt1->execute(['nombre' => $_POST['nombre']]);
+    $fila1 = $stmt1->fetch(PDO::FETCH_ASSOC);
+
+    if ($fila1) {
+        if ($psw === $fila1["password"]) {
+            require "./clases/Empleado.class.php";
+            $_SESSION['usuario'] = $fila1;
+            $success = true;
+        }
+    }
+    echo json_encode($success);
+
 } catch (PDOException $e) {
-    echo json_encode(['success' => false, 'error' => 'Error de conexión: ' . $e->getMessage()]);
+    echo json_encode('Error de conexión: ' . $e->getMessage());
 }
 ?>

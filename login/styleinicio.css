@@ -1,95 +1,66 @@
-
 .contenedor {
-    display: flex;
-    height: 100vh;
-  }
+  display: flex;
+  height: 100vh;
+}
 
+.div-izquierda {
+  flex: 1;
+  background: linear-gradient(to right, #6C788E, #A6AEC1);
+}
+
+.div-derecha {
+  flex: 1;
+  background: linear-gradient(to right, #A6AEC1, #EDEDF2);
+  padding: 20px;
+}
+
+@media screen and (max-width: 800px) {
   .div-izquierda {
-    flex: 1;
-    background: linear-gradient(to right, #6C788E, #A6AEC1);
+    display: none;
   }
 
   .div-derecha {
-    flex: 1;
-    background: linear-gradient(to right, #A6AEC1, #EDEDF2);
-    padding: 20px;
+    background-image: url(./imagenes/fondo-movil.jpg);
+    background-size: 40%;
   }
-
-  h1{
-    margin-top: 10%;
-    text-align: center;
-  }
-
-  form{
-    margin-top: 20%;
-    margin-left: 20%;
-    margin-right: 20%;
-  }
-
-  form label{
-    font-size: 1.3em;
-  }
-
-  form input{
-    margin-bottom:5%;
-  }
-  
-  form button {
-    margin: auto;
-    width: 30%;
-    padding: 10px;
-  }
-
-  .img-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
-
-  
-  .img-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ajusta la imagen para cubrir todo el espacio disponible */
-    border-radius: 20px;
-    filter: blur(5px);
-  }
-
-
-
-  .boton {
-    display: block;
-    margin: 0 auto;
-    width: 150px;
-    padding: 10px;
-    background-color: #CFD5E1;
-    cursor: pointer;
-    border: 2px solid #333;
-    border-radius: 30px;
-    color: #333;
-    transition: all 0.5s ease-in-out;
 }
 
-.boton:hover {
-    color: #fcfdff;
-    background-color: #333;
+h1 {
+  margin-top: 10%;
+  text-align: center;
 }
 
-#customAlerta {
+form {
+  margin-top: 20%;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+form label {
+  font-size: 1.3em;
+}
+
+form input {
+  margin-bottom: 5%;
+}
+
+.img-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1050;
-  min-width: 400px;
-  padding: 20px;
-  background-color:  #6C788E; 
-  color: white; 
-  font-size: 1.4am;
-  font-weight: bold;
+  height: 100%;
 }
 
+.img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+  filter: blur(5px);
+}
+
+.div-btn {
+  display: block;
+  margin: 0 auto;
+  width: 100px;
+}
