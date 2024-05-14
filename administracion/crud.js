@@ -2,10 +2,9 @@ window.addEventListener("load", principal, false);
 window.addEventListener("load", cargarFlashMessage, false);
 
 function principal() {
-    var h1 = crearElemento('h1', formatNombre(tablaSelect()));
+    var h1 = crearElemento('h1', formatNombre(tablaSelect()), { class: 'text-white' });
     h1.innerHTML += '&nbsp;';
     var contenido = document.getElementsByClassName('titulo')[0];
-    contenido.style.display = 'flex';
     contenido.insertBefore(h1, contenido.firstChild);
 
     var xhrTabla = createXMLHttpRequest();
@@ -43,7 +42,7 @@ function principal() {
 }
 
 function crearSelect(tablas) {
-    var select = crearElemento('select', undefined, { name: 'tabla', id: 'tabla', class: 'form-select form-select-lg mb-3 bg-dark text-light' });
+    var select = crearElemento('select', undefined, { name: 'tabla', id: 'tabla', class: 'form-select form-select-lg' });
     var optDefault = crearElemento('option', 'Selecciona una tabla', { value: '', disabled: true, selected: true, hidden: true });
     select.appendChild(optDefault);
     tablas.forEach(function (tabla) {
@@ -56,7 +55,7 @@ function crearSelect(tablas) {
         window.location.href = "./crud.html";
     };
 
-    document.getElementById('formTabla').appendChild(select);
+    document.getElementsByClassName('titulo')[0].appendChild(select);
 }
 
 function crearFormRegistro(estructura) {
@@ -99,7 +98,7 @@ function crearFormRegistro(estructura) {
 function crearTablaRegistros(estructura, registros) {
     var contenido = document.getElementsByClassName('div-contenido')[0];
 
-    var table = crearElemento('table', undefined, { id: 'registros', class: 'table table-responsive table-striped' });
+    var table = crearElemento('table', undefined, { id: 'registros', class: 'table table-responsive table-striped border border-2 border-dark rounded' });
     var thead = crearElemento('thead', undefined, { class: 'table-dark' });
     var tr = crearElemento('tr');
 
@@ -158,7 +157,7 @@ function crearTablaRegistros(estructura, registros) {
         });
         tdEditar.appendChild(btnEditar);
 
-        var tdEliminar = crearElemento('td', undefined, { id: 'td' + (index + 1) + '.99', class: 'text-end col-auto px-0' });
+        var tdEliminar = crearElemento('td', undefined, { id: 'td' + (index + 1) + '.99', class: 'text-end col-auto ps-0 pe-2' });
         var btnEliminar = crearElemento('button', 'Borrar', { type: 'button', 'data-toggle': 'modal', 'data-target': '#modalEliminar', "class": "btn btn-danger" });
         btnEliminar.addEventListener('click', function () {
             document.getElementsByClassName('modal-title')[2].innerHTML = 'Eliminar: ' + registro[obtenerParametroSecundario(tablaSelect())];

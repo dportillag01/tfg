@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Administración de Datos</title>
     <link rel="icon" type="image/png" href="" />
-    <!-- Agrega el enlace al archivo CSS de Bootstrap 5.3.0 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./administracion.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="../layout/layout.js"></script>
@@ -16,13 +17,12 @@
 
 
 <body>
-    <div class="div-contenido table-responsive m-3">
-        <div class="titulo">
-            <button type="button" data-toggle="modal" data-target="#modalNuevo" class="btn btn-lg btn-success ">Nuevo
-                Registro</button>
+    <form method="post" id="formTabla">
+        <div class="titulo bg-dark m-3 p-2 rounded">
+            <button type="button" data-toggle="modal" data-target="#modalNuevo" class="btn btn-lg btn-success me-2">NuevoRegistro</button>
         </div>
-        <form method="post" id="formTabla"></form>
-
+    </form>
+    <div class="div-contenido table-responsive mx-3">
         <div class="modal fade" id="modalNuevo" tabindex="-1" role="dialog" aria-labelledby="modalNuevo"
             aria-hidden="true">
             <div class="modal-dialog" role="document">

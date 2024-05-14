@@ -1,0 +1,20 @@
+body {
+  background-image:  url(../layout/imagenes/fondo-admin.jpg);
+  background-size: 17%;
+  scrollbar-color: rebeccapurple;
+}
+
+.titulo {
+  display: flex;
+}
+
+#tabla {
+  min-width: 240px;
+}
+
+@media screen and (max-width: 700px) {
+  .titulo {
+    flex-flow: row wrap;
+  }
+
+}
