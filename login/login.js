@@ -9,6 +9,8 @@ function manejadorConectar() {
     if (validarCampos()) {
         var nombre = document.getElementById("nombre").value;
         var password = document.getElementById("password").value;
+
+        //Envio de datos de inicio al servidor
         var xhr = new XMLHttpRequest();
         xhr.open('POST', './login.php', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -30,6 +32,7 @@ function manejadorConectar() {
     }
 }
 
+//Validar la existencia de datos
 function validarCampos() {
     ok = true;
     if (document.getElementById("nombre").value === "") {
@@ -48,19 +51,8 @@ function validarCampos() {
     return ok;
 }
 
-function mostrarAlerta(mensaje, tiempo) {
-    var alertBox = document.getElementById('customAlerta');
-    var alertText = document.getElementById('alertaTexto');
-
-    alertText.innerText = mensaje;
-    alertBox.classList.remove('d-none');
-
-    alertBox.classList.add('show');
-
-    setTimeout(function () {
-        alertBox.classList.add('d-none');
-    }, tiempo);
-}
+//----------------------------------------------------------------
+//Procesado de mensajes flash para informar al usuario de errores en login
 
 function setFlashMessage(message, estado, recargar) {
     if (recargar) {
@@ -85,27 +77,14 @@ function cargarFlashMessage() {
 }
 
 function mostrarFlashMessage(message, estado) {
-    var flashMessage = crearElemento('div', undefined, {
-        id: 'flash-message', class: 'alert alert-' + estado + ' alert-dismissible fade show d-flex justify-content-center align-items-center', 
-        style: 'position: fixed; top: 50%; left: 40%; transform: translate(-50%, -50%); z-index: 1050; min-width: 200px; padding: 20px;' });
+    var flashMessage = document.createElement('div');
+    flashMessage.setAttribute('id', 'flash-message');
+    flashMessage.setAttribute('class', 'alert alert-' + estado + ' alert-dismissible fade show d-flex justify-content-center align-items-center');
+    flashMessage.setAttribute('style', 'position: fixed; top: 50%; left: 40%; transform: translate(-50%, -50%); z-index: 1050; min-width: 200px; padding: 20px;');
     flashMessage.textContent = message;
     document.body.insertBefore(flashMessage, document.body.firstChild);
 
     setTimeout(function () {
-        flashMessage.classList.add('d-none');
+        flashMessage.remove();
     }, 3000);
-}
-
-function crearElemento(etiqueta, texto, atributos) {
-    let elementoNuevo = document.createElement(etiqueta);
-    if (texto !== undefined) {
-        let contenido = document.createTextNode(texto);
-        elementoNuevo.appendChild(contenido);
-    }
-    if (atributos !== undefined) {
-        for (let clave in atributos) {
-            elementoNuevo.setAttribute(clave, atributos[clave]);
-        }
-    }
-    return elementoNuevo;
 }
