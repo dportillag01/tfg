@@ -16,37 +16,44 @@ function principal() {
 
 function crearTarjetas(resultado) {
     var grid = crearElemento('div', undefined, { id: 'grid', class: 'row mx-5' });
-
+    var h1 = crearElemento('h1', 'Carrito:', { class: 'bg-dark border border-dark rounded mx-5 px-1', style: 'color: #8576FF; display: inline-block;' });
+    document.body.appendChild(h1);
+    if (resultado.length == 0) {
+        var vacio = crearElemento('h3', 'No hay reparaciones.', { class: 'bg-light p-2 rounded', style: 'width: 300px' });
+        grid.appendChild(vacio);
+    }
     resultado.forEach(producto => {
-        var div = crearElemento("div", undefined, { class: 'col-md-12 mb-4' });
-        var targeta = crearElemento("div", undefined, { class: 'card bg-secondary'});
+        var rep = crearElemento("div", undefined, { class: 'col-xl-12 col-xxl-6 mb-4' });
+        var targeta = crearElemento("div", undefined, { class: 'card h-100 bg-dark text-white'});
         targeta.innerHTML = `
             <div class="row no-gutters">
-                <div class="col-md-1 fix-size">
-                    <img src="./imagenes/producto${producto.id}.jpg" class="card-img">
+                <div class="col-md-2 fix-size p-3">
+                    <img src="./imagenes/producto${producto.fk_producto}.jpg" class="card-img">
                 </div>
                 <div class="col-md-4">
                     <div class="card-body">
-                        <h5 class="card-title">${producto.nombre}</h5>
-                        <p class="card-text">Precio: ${producto.precio}€</p>
+                        <h5 class="card-title" style="color: #8576FF">${producto.nombre}</h5>
+                        <!--<p class="card-text">Fecha de entrega: ${producto.f_entrega}</p>-->
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="card-body">
-                        <p class="card-text">Cantidad x<strong></strong></p>
+                        <p class="card-text">Cantidad x${producto.cantidad}<strong></strong></p>
+                        <p class="card-text">Precio por unidad: ${producto.precio}€<strong></strong></p>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card-body">
-                        <a href="./carrito.html" class="btn btn-primary">Comprar</a>
-                        <a href="./carrito.html" class="btn btn-primary">Comprar</a>
+                        <a href="./carrito.html" class="btn btn-danger">Eliminar</a>
+                        <!--<a href="./carrito.html" class="btn btn-primary">Modificar</a>-->
                     </div>
                 </div>
             </div>
         `;
-        div.appendChild(targeta);
-        grid.appendChild(div);
+        rep.appendChild(targeta);
+        grid.appendChild(rep);
     });
+
     document.body.appendChild(grid);
 }
 

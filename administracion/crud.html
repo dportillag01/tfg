@@ -19,10 +19,12 @@
 <body>
     <form method="post" id="formTabla">
         <div class="titulo bg-dark m-3 p-2 rounded">
-            <button type="button" data-toggle="modal" data-target="#modalNuevo" class="btn btn-lg btn-success me-2">NuevoRegistro</button>
+            <button type="button" data-toggle="modal" data-target="#modalNuevo" class="btn btn-lg btn-success me-2">Nuevo&nbsp;Registro</button>
         </div>
     </form>
-    <div class="div-contenido table-responsive mx-3">
+
+    <!--Modal nuevo registro-->
+    <div class="div-contenido table-responsive ms-3 mx-md-3">
         <div class="modal fade" id="modalNuevo" tabindex="-1" role="dialog" aria-labelledby="modalNuevo"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -40,6 +42,7 @@
             </div>
         </div>
 
+        <!--Modal editar registro-->
         <div class="modal fade" id="modalEditar" tabindex="-1" role="dialog" aria-labelledby="modalEditar"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -57,6 +60,7 @@
             </div>
         </div>
 
+        <!--Modal eliminar registro-->
         <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="modalEliminar"
             aria-hidden="true">
             <div class="modal-dialog" role="document">

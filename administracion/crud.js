@@ -2,6 +2,7 @@ window.addEventListener("load", principal, false);
 window.addEventListener("load", cargarFlashMessage, false);
 
 function principal() {
+    //Nombre de la tabla de ddbb mostrandose actualmente
     var h1 = crearElemento('h1', formatNombre(tablaSelect()), { class: 'text-white' });
     h1.innerHTML += '&nbsp;';
     var contenido = document.getElementsByClassName('titulo')[0];
@@ -41,6 +42,7 @@ function principal() {
     xhrEstructura.send('accion=obtenerEstructuraTabla&tabla=' + encodeURIComponent(tablaSelect()));
 }
 
+//Select para cambiar la tabla de ddbb
 function crearSelect(tablas) {
     var select = crearElemento('select', undefined, { name: 'tabla', id: 'tabla', class: 'form-select form-select-lg' });
     var optDefault = crearElemento('option', 'Selecciona una tabla', { value: '', disabled: true, selected: true, hidden: true });
@@ -58,11 +60,15 @@ function crearSelect(tablas) {
     document.getElementsByClassName('titulo')[0].appendChild(select);
 }
 
+//Modal para crear un nuevo registro en ddbb
 function crearFormRegistro(estructura) {
     var form = document.getElementById('formRegistro');
+
+    //Envio de nuevo registro
     form.addEventListener('submit', function (event) {
         event.preventDefault();
 
+        //Formatear datos para enviarlos al servidor
         var formData = new FormData(form);
         formData.append('tabla', tablaSelect());
 
@@ -87,6 +93,7 @@ function crearFormRegistro(estructura) {
         xhrNewRegistro.send(data);
     });
 
+    //Creacion del form nuevo registro
     estructura.forEach(function (campo) {
         formGenerico(campo, "", form);
     });
@@ -95,6 +102,7 @@ function crearFormRegistro(estructura) {
     form.appendChild(btn);
 }
 
+//Registros de la tabla de ddbb seleccionada
 function crearTablaRegistros(estructura, registros) {
     var contenido = document.getElementsByClassName('div-contenido')[0];
 
@@ -102,25 +110,27 @@ function crearTablaRegistros(estructura, registros) {
     var thead = crearElemento('thead', undefined, { class: 'table-dark' });
     var tr = crearElemento('tr');
 
+    //Header para campos de la tabla
     estructura.forEach(function (campo) {
-        if (campo[0] !== 'Id' || tablaSelect() == "pedidos") {
-            var th = crearElemento('th', formatNombre(campo[0]));
-            tr.appendChild(th);
-        }
+        var th = crearElemento('th', formatNombre(campo[0]));
+        tr.appendChild(th);
     });
 
+    //Header para botones de editar y eliminar
     var thAcciones = crearElemento('th', '');
     tr.appendChild(thAcciones.cloneNode(true));
     tr.appendChild(thAcciones.cloneNode(true));
     thead.appendChild(tr);
     table.appendChild(thead);
 
+    //Registros
     var tBody = crearElemento('tbody');
     registros.forEach(function (registro, index) {
         var trRegistro = crearElemento('tr', undefined, { id: "tr" + (index + 1) });
 
         estructura.forEach(function (campo, cIndex) {
-            if (campo[0].startsWith("Fk_")) {
+            //Cambiar foreign keys por campos mas legibles
+            if (campo[0].startsWith("fk_")) {
                 var xhrFk = createXMLHttpRequest();
                 xhrFk.onload = function () {
                     if (xhrFk.status >= 200 && xhrFk.status < 300) {
@@ -130,14 +140,16 @@ function crearTablaRegistros(estructura, registros) {
                         resultado.forEach(function (r) {
                             var tdCampo = crearElemento('td', r[clave[1]], { id: "td" + (index + 1) + "." + (cIndex + 1) });
                             trRegistro.appendChild(tdCampo);
+                            //Solución a desfase por asincronidad
                             posicionarTabla(trRegistro);
                         });
                     } else {
                         console.error('Error al obtener las tablas.');
                     }
                 };
-                xhrFk.send('accion=obtenerFK&tabla=' + encodeURIComponent(campo[0].substring(3)) + '&id=' + encodeURIComponent(registro[campo[0]]));
-            } else if (campo[0] !== 'Id' || tablaSelect() == "pedidos") {
+                xhrFk.send('accion=obtenerFK&tabla=' + encodeURIComponent(campo[0].substring(3)) + '&id=' + encodeURIComponent(registro[campo[0]])); 
+            } else {
+                //Cambiar campos tipo tinyint para mejorar legibilidad
                 if (campo[1] === 'tinyint' && registro[campo[0]] == 1) {
                     registro[campo[0]] = 'Completado';
                 } else if (campo[1] === 'tinyint' && registro[campo[0]] == 0) {
@@ -150,6 +162,7 @@ function crearTablaRegistros(estructura, registros) {
             }
         });
 
+        //Botones para editar y eliminar
         var tdEditar = crearElemento('td', undefined, { id: 'td' + (index + 1) + '.98', class: 'text-end col-auto px-0' });
         var btnEditar = crearElemento('button', 'Editar', { type: 'button', 'data-toggle': 'modal', 'data-target': '#modalEditar', "class": "btn btn-primary" });
         btnEditar.addEventListener('click', function () {
@@ -177,6 +190,7 @@ function crearTablaRegistros(estructura, registros) {
 
 }
 
+//Peticion para obtener el registro que se quiere modificar y cargarlo en el form editar
 function modificarRegistro(registro) {
     var xhrEstructuraEditar = createXMLHttpRequest();
     xhrEstructuraEditar.onload = function () {
@@ -199,6 +213,7 @@ function modificarRegistro(registro) {
     xhrEstructuraEditar.send('accion=obtenerEstructuraTabla&tabla=' + encodeURIComponent(tablaSelect()));
 }
 
+//Form para editar un registro
 function crearFormEditar(registro, estructura) {
     document.getElementsByClassName('modal-title')[1].innerHTML = 'Editar: ' + registro[0][obtenerParametroSecundario(tablaSelect())];
     var form = document.getElementById('formEditar');
@@ -206,6 +221,8 @@ function crearFormEditar(registro, estructura) {
 
     form.addEventListener('submit', function (event) {
         event.preventDefault();
+
+        //Formatear datos para enviarlos al servidor
         var formData = new FormData(form);
         formData.append('tabla', tablaSelect());
         formData.append('id', registro[0]['id']);
@@ -230,6 +247,7 @@ function crearFormEditar(registro, estructura) {
         xhrEditRegistro.send(data);
     });
 
+    //Crear form editar y añadir los datos del registro
     Object.keys(registro[0]).forEach(function (campo, index) {
         formGenerico(estructura[index], registro[0][campo], form);
     });
@@ -238,6 +256,7 @@ function crearFormEditar(registro, estructura) {
     form.appendChild(btn);
 }
 
+//Peticion para eliminar un registro
 function eliminarRegistro(registro) {
     var xhrSuprRegistro = createXMLHttpRequest();
     xhrSuprRegistro.onload = function () {
@@ -257,6 +276,10 @@ function eliminarRegistro(registro) {
     backdrop.parentNode.removeChild(backdrop);
 }
 
+//--------------------------------------------------------------------------------------------------------------------------------------------
+//Funciones comunes
+
+//Devuelve la tabla solicitada para ser mostrada, si no, devulve la tabla productos por defecto
 function tablaSelect() {
     var tablaSeleccionada = localStorage.getItem('tablaSeleccionada');
     if (tablaSeleccionada === null || tablaSeleccionada === undefined) {
@@ -272,6 +295,7 @@ function createXMLHttpRequest() {
     return xhr;
 }
 
+//Crea los form de modal nuevo y modal modificar
 function formGenerico(campo, registro, form) {
     if (campo[0] !== 'id') {
         var label = crearElemento('label', formatNombre(campo[0]), { 'for': campo[0] });
@@ -350,6 +374,7 @@ function formGenerico(campo, registro, form) {
     }
 }
 
+//Correccion de desorden causado por asincronía en peticiones XMLHttpRequest
 function posicionarTabla(tr) {
     var tds = tr.getElementsByTagName('td');
     var tdsArray = Array.prototype.slice.call(tds);
@@ -370,13 +395,14 @@ function formatNombre(nombre) {
 }
 
 function obtenerParametroSecundario($tabla) {
-    if ($tabla == 'ventas') {
+    if ($tabla == 'ventas' || $tabla == 'r_ventas_productos') {
         return 'id';
     } else {
         return 'nombre';
     }
 }
 
+//Llama a mostrarFlashMessage o almacena el mensaje en localStorage
 function setFlashMessage(message, estado, recargar) {
     if (recargar) {
         localStorage.setItem('flash-' + estado, message);
@@ -386,6 +412,7 @@ function setFlashMessage(message, estado, recargar) {
     }
 }
 
+//Muestra un mensaje flash durante 3 segundos
 function mostrarFlashMessage(message, estado) {
     var contenido = document.getElementsByClassName('div-contenido')[0];
     var flashMessage = crearElemento('div', undefined, { id: 'flash-message', class: 'alert alert-' + estado + ' alert-dismissible fade show' });
@@ -398,6 +425,7 @@ function mostrarFlashMessage(message, estado) {
     }, 3000);
 }
 
+//Al cargar la pagina, recorre localStorage para enviar a mostrarFlashMessage los mensajes pendientes
 function cargarFlashMessage() {
     for (var i = 0; i < localStorage.length; i++) {
         var key = localStorage.key(i);
@@ -411,6 +439,7 @@ function cargarFlashMessage() {
     }
 }
 
+//Simplifica la creación de un elemento html con DOM a 1 linea
 function crearElemento(etiqueta, texto, atributos) {
     let elementoNuevo = document.createElement(etiqueta);
     if (texto !== undefined) {

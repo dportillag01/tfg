@@ -20,6 +20,7 @@ try {
     exit();
 }
 
+//Conectar a la ddbb
 function conectar()
 {
     global $host, $user, $password, $database;
@@ -29,6 +30,7 @@ function conectar()
     return $conn;
 }
 
+//Acción que se pide realizar
 if (isset($_POST['accion'])) {
     switch ($_POST['accion']) {
         case 'obtenerTablas':
@@ -103,6 +105,7 @@ function obtenerRegistros($tabla)
     $resultado = $conn->query($sql);
     if ($resultado->rowCount() > 0) {
         while ($fila = $resultado->fetch(PDO::FETCH_ASSOC)) {
+            unset($fila['password']);
             $registros[] = $fila;
         }
     }
@@ -118,6 +121,7 @@ function obtenerRegistro($tabla, $id)
     $resultado = $conn->query($sql);
     if ($resultado->rowCount() > 0) {
         while ($fila = $resultado->fetch(PDO::FETCH_ASSOC)) {
+            unset($fila['password']);
             $registro[] = $fila;
         }
     }
@@ -131,13 +135,13 @@ function insertarRegistro($tabla, $data)
     $columnas = [];
     $valores = [];
 
+    //Procesado de datos para que sea una solicitud generica
     foreach ($data as $clave => $valor) {
         if ($clave !== 'accion' && $clave !== 'tabla' && $clave !== 'id') {
             $columnas[] = $clave;
             $valores[] = $valor === null ? 'NULL' : $conn->quote($valor);
         }
     }
-
     $columnasStr = implode(', ', $columnas);
     $valoresStr = implode(', ', $valores);
 
@@ -160,6 +164,9 @@ function actualizarRegistro($tabla, $data, $id)
     $conn = conectar();
 
     $columnas = [];
+    unset($columnas['password']);
+
+    //Procesado de datos para que sea una solicitud generica
     foreach ($data as $clave => $valor) {
         if ($clave !== 'accion' && $clave !== 'tabla' && $clave !== 'id') {
             $columnas[] = "$clave = '$valor'";
@@ -198,6 +205,7 @@ function eliminarRegistro($tabla, $id)
     echo json_encode($response);
 }
 
+//Recibe fk y devuelve un campo que sea legible para el usuario en vez de id
 function obtenerFk($tabla, $id)
 {
     $conn = conectar();

@@ -16,25 +16,29 @@ function principal() {
 
 function crearTarjetas(resultado) {
     var grid = crearElemento('div', undefined, { id: 'grid', class: 'row mx-5' });
-
+    if (resultado.length == 0) {
+        var vacio = crearElemento('h3', 'No hay reparaciones.', { class: 'bg-light p-2 rounded', style: 'width: 300px' });
+        grid.appendChild(vacio);
+    }
     resultado.forEach(reparacion => {
-        var div = crearElemento("div", undefined, { class: 'col-md-3 mb-4' });
-        var targeta = crearElemento("div", undefined, { class: 'card bg-secondary', style: 'height: 300px;' });
+        var div = crearElemento("div", undefined, { class: 'col-sm-12 col-lg-6 mb-4' });
+        var targeta = crearElemento("div", undefined, { class: 'card h-100 bg-light' });
         targeta.innerHTML = `
         <div class="row no-gutters">
-        <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title">${reparacion.motivo}</h5>
-                <p class="card-text"><strong>Detalles:</strong> ${reparacion.mot_detalles}</p>
-                <p class="card-text"><strong>Diagnóstico:</strong> ${reparacion.diagnostico}</p>
-                <p class="card-text"><strong>Estado:</strong> ${reparacion.estado}</p>
+            <h5 class="card-title mt-3 mx-3" style="color: #8576FF"><strong>${reparacion.motivo}</strong></h5>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <p class="card-text"><strong>Detalles:</strong> ${reparacion.mot_detalles}</p>
+                    <p class="card-text"><strong>Diagnóstico:</strong> ${reparacion.diagnostico}</p>
+                    <p class="card-text"><strong>Estado: ${reparacion.estado ? '<span style="color: #13BF56">Completado</span>' : '<span class="text-warning">En proceso</span>'}</strong></p>
+                </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card-body">
+            <div class="col-md-4">
+                <div class="card-body">
                     <p class="card-text"><strong>Tecnico:</strong> ${reparacion.empleado}</p>
-                <p class="card-text"><strong>Fecha de recogida:</strong> ${reparacion.f_recepcion}</p>
-                <p class="card-text"><strong>Coste:</strong> ${reparacion.coste}€</p>
+                    <p class="card-text"><strong>Fecha de recogida:</strong> ${reparacion.f_recepcion}</p>
+                    <p class="card-text"><strong>Coste:</strong> ${reparacion.coste}€</p>
+                </div>
             </div>
         </div>
         `;
@@ -49,40 +53,6 @@ function createXMLHttpRequest() {
     xhr.open('POST', './consultas.php', true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     return xhr;
-}
-
-function setFlashMessage(message, estado, recargar) {
-    if (recargar) {
-        localStorage.setItem('flash-' + estado, message);
-        window.location.href = "./crud.html";
-    } else {
-        mostrarFlashMessage(message, estado);
-    }
-}
-
-function mostrarFlashMessage(message, estado) {
-    var contenido = document.getElementsByClassName('div-contenido')[0];
-    var flashMessage = crearElemento('div', undefined, { id: 'flash-message', class: 'alert alert-' + estado + ' alert-dismissible fade show' });
-    flashMessage.textContent = message;
-    flashMessage.style.display = 'block';
-    contenido.insertBefore(flashMessage, contenido.firstChild);
-
-    setTimeout(function () {
-        flashMessage.style.display = 'none';
-    }, 3000);
-}
-
-function cargarFlashMessage() {
-    for (var i = 0; i < localStorage.length; i++) {
-        var key = localStorage.key(i);
-        if (key.startsWith("flash-")) {
-            var message = localStorage.getItem(key);
-            localStorage.removeItem(key);
-            var estado = key.replace("flash-", "");
-            mostrarFlashMessage(message, estado);
-            i--;
-        }
-    }
 }
 
 function crearElemento(etiqueta, texto, atributos) {

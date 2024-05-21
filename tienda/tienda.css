@@ -2,3 +2,23 @@ body {
   background-image:  url(../layout/imagenes/fondo-header.jpg);
   background-size: 27%;
 }
+
+.img-detalle {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border: 2px solid black;
+  border-radius: 5px;
+}
+
+.detalle {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+@media screen and (max-width: 800px) {
+  .detalle {
+    margin-left: 3%;
+    margin-right: 3%;
+  }
+}
